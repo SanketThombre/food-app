@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="./styles/navbar.css">
+    <link rel="stylesheet" href="./styles/search_recipe.css">
+
+    <title>Food App</title>
+
+    <style>
+    </style>
+   
+</head>
+<body>
+  <div id="container"></div> 
+  
+  <div id="searchdiv">
+    <h2>Search Recipe :</h2>
+    <input  type="text" id="searchbox" placeholder="Enter Dish Name">
+     </div>
+     <div id="searchdish"></div>
+
+     <div id="dishinfo"></div>
+     <div id="fullmenu"></div>
+</body>
+</html>
+
+<script type="module">
+ import navbar from "./scripts/navbar.js";
+  console.log("navbar: ",navbar);
+
+  let container = document.getElementById("container");
+
+  container.innerHTML=navbar();
+
+
+
+  // landing Page 
+
+  async function mainpage(){
+     try{
+         let res = await fetch ("https://www.themealdb.com/api/json/v1/1/categories.php");
+
+         let data = await res.json();
+
+         maindata(data);
+         console.log("data:",data);
+     }
+     catch(er){
+         console.log(er);
+     }
+ }
+
+ mainpage();
+
+ let fullmenu = document.getElementById("fullmenu");
+ function maindata(data){
+
+    data.categories.forEach((el)=>{
+
+        let div = document.createElement("div");
+        let image = document.createElement("img");
+        image.src = el.strCategoryThumb
+        let h2 = document.createElement("h2");
+         h2.innerHTML = el.strCategory;
+         
+         div.append(image,h2);
+         fullmenu.append(div);
+        
+    })
+
+ }
+
+
+ // Debouncing Data;
+
+let menu =  document.getElementById("searchbox")
+   menu.addEventListener("input",debouncing)
+
+  async function dishsearch() {
+    try{
+
+      let response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${menu.value}`);
+
+      let data = await response.json();
+
+    
+       showdata(data);
+      console.log("data:",data);
+    }
+    catch(er){
+      console.log("err:",er);
+    }
+  }
+
+  let searchdish = document.getElementById("searchdish");
+
+
+  function showdata(data){
+searchdish.style.display="block";
+    searchdish.innerHTML="";
+
+if(data==undefined){
+     return false;
+ }
+
+    data.meals.forEach((el)=>{
+console.log(el);
+      let div = document.createElement("div");
+
+     div.onclick = ()=>{
+       displaydata(el.idMeal);
+     }
+      let image = document.createElement("img");
+      image.src=el.strMealThumb;
+
+      let namediv = document.createElement("div");
+
+      let title = document.createElement("h2");
+      title.innerHTML = el.strMeal;
+
+      let cat =  document.createElement("h4");
+      cat.innerHTML = `Category : ${el.strCategory}`;
+
+      namediv.append(title,cat)
+
+      div.append(image,namediv);
+      searchdish.append(div);
+    })
+  }
+let time;
+
+  function debouncing(){
+
+if(time){
+    clearTimeout(time);
+}
+
+time = setTimeout( function (){
+dishsearch();
+
+},500);
+};
+  
+
+
+// Recipe Instructions
+
+let dishinfo = document.getElementById("dishinfo");
+
+async function displaydata(id){
+  fullmenu.style.display="none";
+dishinfo.innerHTML="";
+  searchdish.style.display="none";
+  dishinfo.style.display="grid";
+
+  try{
+
+    let res = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
+    let data = await res.json();
+    recipeinfo(data);
+    console.log("data:",data);
+  }
+  catch(er){
+    console.log("err:",er);
+  }
+
+}
+
+function recipeinfo(data){
+
+data.meals.forEach((el)=>{
+
+    let div = document.createElement("div");
+div.setAttribute("class","pic");
+
+let desc = document.createElement("div");
+desc.setAttribute("class","desc");
+
+let box = document.createElement("div");
+box.setAttribute("class","link")
+
+let h1 = document.createElement("h1");
+h1.innerHTML = el.strMeal;
+
+let inst = document.createElement("h2");
+inst.innerHTML = "Instruction:";
+
+let p = document.createElement("p");
+p.innerHTML = el.strInstructions;
+
+desc.append(inst,p);
+
+let image = document.createElement("img");
+image.src = el.strMealThumb;
+div.append(image)
+box.append(h1);
+dishinfo.append(box,div,desc);
+
+
+})
+
+
+}
+
+</script>

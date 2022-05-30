@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/navbar.css">
+    <title>Latest Recipes</title>
+
+
+    <style>
+        #latest {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+
+            grid-gap: 20px;
+            padding: 20px;
+        }
+
+        #latest div {
+            border: teal 1px solid;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+             border-radius: 10px;
+        }
+
+        #latest h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+   <div id="container"></div>
+   
+   <div id="latest"></div>
+</body>
+</html>
+
+<script type="module">
+    import navbar from "./scripts/navbar.js";
+ console.log("navbar: ",navbar);
+
+ let container = document.getElementById("container");
+
+ container.innerHTML=navbar();
+
+
+
+ async function latestdish(){
+     try{
+         let res = await fetch ("https://www.themealdb.com/api/json/v1/1/categories.php");
+
+         let data = await res.json();
+
+         showdata(data);
+         console.log("data:",data);
+     }
+     catch(er){
+         console.log(er);
+     }
+ }
+
+ latestdish();
+
+ let latest = document.getElementById("latest");
+ function showdata(data){
+
+    data.categories.forEach((el)=>{
+
+        let div = document.createElement("div");
+        let image = document.createElement("img");
+        image.src = el.strCategoryThumb
+        let h2 = document.createElement("h2");
+         h2.innerHTML = el.strCategory;
+         
+         div.append(image,h2);
+         latest.append(div);
+        
+    })
+
+ }
+</script>

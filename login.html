@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <div>
+
+        <form onsubmit="login(event)">
+    <h1>Login</h1>
+            <input type="text" id="username_login" placeholder="Username">
+            <br><br>
+            <input type="password" id="password_login" placeholder="Password">
+    <br><br>
+            <input type="submit">
+        </form>
+       </div>
+</body>
+</html>
+
+<script>
+     async function login(e){
+
+e.preventDefault();
+let login_data = {
+    username:document.getElementById("username_login").value,
+    password:document.getElementById("password_login").value,
+
+}
+
+login_data = JSON.stringify(login_data);
+
+let login_url = `https://masai-api-mocker.herokuapp.com/auth/login`;
+let response = await fetch(login_url,{
+
+    method:"POST",
+    body:login_data,
+
+    headers: {
+        "Content-Type": "application/json",
+
+    },
+
+})
+let data = await response.json();
+console.log("data:",data);
+
+window.location.href="./search_recipe.html";
+
+
+let username = document.getElementById("username_login").value;
+getuser(username,data.token);
+}
+
+
+async function getuser(username,token){
+        let api = `https://masai-api-mocker.herokuapp.com/user/${username}`
+
+        let response = await fetch(api, {
+
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+
+           
+        });
+
+        let data = await response.json();
+        console.log("data:",data);
+    }
+
+</script>

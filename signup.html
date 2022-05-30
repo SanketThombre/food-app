@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/navbar.css">
+    <title>SignUp</title>
+
+    <style>
+        
+        #formdiv {
+          width: 25%;
+         margin: 30px auto;
+        }
+#form > input {
+  width: 400px;
+  height: 40px;
+}
+.cont1 > span {
+  color: #8d8ea7;
+  font-size: 15px;
+  padding-right: 10px;
+}
+h1 {
+  font-family: Montserrat, sans-serif;
+}
+#account {
+  font-family: Montserrat, sans-serif;
+  font-size: 20px;
+  margin: 40px 0px 30px 20px;
+}
+#formdiv > label {
+  font-size: 12px;
+  font-weight: bold;
+  font-family: Poppins, sans-serif;
+}
+#sub {
+  border: 0;
+  height: 50px;
+  width: 250px;
+  background-color: #383e47;
+  color: #ea3469;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+}
+input {
+  margin-top: 10px;
+}
+span {
+  color: red;
+  font-size: 10px;
+}
+    </style>
+</head>
+<body>
+
+  <div id="container"></div>
+    <div id="formdiv">
+        <form id="form" onsubmit="Register(event)">
+            <label class="leb1">Name</label><span>*</span>
+            <br>
+            <input type="text" id="name" placeholder="Name">
+            <br><br>
+            <label  class="leb1 ">User Name</label><span>*</span>
+            <br>
+            <input type="text" id="username" placeholder="Username">
+            <br><br>
+            <label class="leb1">Email</label><span>*</span>
+            <br>
+            <input type="email" id="email" placeholder="Email">
+            <br><br>
+            <label class="leb1">Password</label><span>*</span>
+            <br>
+            <input type="password" id="password" placeholder="Password">
+            <br><br>
+            <label class="leb1">Mobile No.</label><span>*</span>
+            <br>
+            <input type="number" id="mobile" placeholder="mobile">
+            <br><br>
+            <input type="submit" value="Create An Account">
+        </form>
+
+       
+    </div>
+</body>
+</html>
+
+<script type="module">
+  import navbar from "./scripts/navbar.js";
+  let container = document.getElementById("container");
+
+  container.innerHTML=navbar();
+
+</script>
+
+<script>
+  async function Register(e){
+        try{
+            e.preventDefault();
+            var register_data = {
+                name : document.getElementById("name").value,
+                email : document.getElementById("email").value,
+                password : document.getElementById("password").value,
+                username : document.getElementById("username").value,
+                mobile : document.getElementById("mobile").value,
+                description : document.getElementById("description").value,
+
+            };
+
+            register_data = JSON.stringify(register_data);
+            console.log("register_data:",register_data);
+
+           
+        }
+        catch(er){
+            console.log(er);
+        }
+
+        let reg_api = `https://masai-api-mocker.herokuapp.com/auth/register`;
+
+        let response = await fetch(reg_api, {
+
+            method:"POST",
+            body:register_data,
+
+            headers: {
+                "Content-Type": "application/json",
+
+            },
+
+        });
+        let data = await response.json();
+        console.log("data:",data);
+        window.location.href="./search_recipe.html";
+
+       
+    }
+
+</script>
+

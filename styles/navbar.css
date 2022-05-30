@@ -1,0 +1,24 @@
+#navbar {
+    display: flex;
+    padding-left: 4%;
+    padding-right: 4%;
+    border: solid black 1px;
+    justify-content: space-between;
+    background: linear-gradient(red,goldenrod);
+  }
+
+  #options {
+    display: flex;
+    gap: 20px;
+  }
+
+  #navbar a{
+    text-decoration: none;
+    color: black;
+
+    font-size: 20px;
+  }
+
+  body{
+    margin: 0px;
+  }
